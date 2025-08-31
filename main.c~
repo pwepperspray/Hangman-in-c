@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_CHANCES 7
+
+void word_selector(char* word);
+void display();
+
+int main(){
+	srand(time(NULL));
+	char word[15]; //the size 15 has been selected arbitrarily		    
+	display();
+	return 0;
+}
+
+void word_selector(char* word){
+	int count = 0, randomNumber = rand() % 213;
+	FILE *file;
+
+	file = fopen("wordbank","r");
+	if(file == NULL){
+		printf("Cannot open file \n");
+		exit(2);
+	}
+	while(fgets(word,14,file) != 0){
+		count++;
+		if(count == randomNumber){
+			break;
+		}
+	}
+	fclose(file);
+}
+
+void display(){
+	const char *topAndBottom[] ={" +---+","======"}, 
+			    	 *noose[] = {"     |","|    |"},
+			          *head[] = {"     |","O    |"},
+			  		 *hands[] = {"     |"," |   |"},
+			   		  *legs[] = {"     |","     |"}; 
+	
+	printf("%s\n%s\n",head[1],hands[1]);
+	
+}
