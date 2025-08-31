@@ -2,10 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+void run(FILE *file){
+	
+	int count = 0, r = rand() % 213;
+	char word[15];
+	while(fgets(word,14,file) != 0){
+		count++;
+		if(count == r){
+			break;
+		}
+	}
+	printf("count : %d, Word : %s \n", count, word);
+
+}
+
 int main(){
-	int count = 0;
 	FILE *file;
-	char word[15]; //word length is taken arbitrarily
 	
 	file = fopen("wordbank","r");
 	if(file == NULL){
@@ -13,8 +25,9 @@ int main(){
 		exit(2);
 	}
 
-	while(fgets(word,14,file) != 0){
-		printf("%s", word);
-	}
+	run(file);
+	run(file);
+	run(file);
+
 	return 0;
 }
