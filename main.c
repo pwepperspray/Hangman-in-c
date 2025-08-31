@@ -6,7 +6,8 @@
 #define MAX_CHANCES 7
 
 void word_selector(char* word);
-void display(int state);
+void hangman(int state);
+void playing_console();
 
 int main(){
 	srand(time(NULL));
@@ -44,7 +45,7 @@ void word_selector(char* word){
 "      |",
 "========="}; */
 
-void display(int state){
+void hangman(int state){
 
 	printf("+++++++++++++HANGMAN+++++++++++++\n");
 	const char *row0[] = {"  +---+","      |","========="},
