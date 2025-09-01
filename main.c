@@ -10,21 +10,18 @@
 #include <time.h>
 
 #define MAX_CHANCES 7
-#define MAX_WORD_LENGTH 15 //the size 15 has been selected arbitrarily	
+#define MAX_WORD_LENGTH 50 //the size 50 has been selected arbitrarily	
+
 void word_selector(char *word, char *answer);
+void run(char *word, char *answer);
+void (char *word);
+void clear_screen();
 void hangman(int state);
-void player_console(char *word, char *answer);
 
 int main(){
 	srand(time(NULL));
 	char word[MAX_WORD_LENGTH],answer[MAX_WORD_LENGTH]; 	
-	for(int i = 0; i < 8; i++){
-		hangman(i);
-		printf("\n");
-	}	    
-	word_selector(word, answer);
-	printf("%s %d\n",word, strlen(word));
-	printf("%s %d",answer, strlen(word));
+	run(word, answer);
 	return 0;
 }
 
@@ -39,15 +36,16 @@ void word_selector(char *word, char *answer){
 	}
 	
 	//counting number of words in file 
-	while(fegts(word,MAX_WORD_LENGTH, file)){
-		total++;
+	while(fgets(word,MAX_WORD_LENGTH, file)){
+		totalWords++;
 	}
-	if(total == 0){
+	if(totalWords == 0){
 		printf("Wordbank is empty\n");
-		close(file);
+		fclose(file);
 		exit(3);
 	}
-
+	
+	//gettting a random number
 	randomNumber = rand() % totalWords;
 	
 	//reading the file and selecting a random word
@@ -56,12 +54,25 @@ void word_selector(char *word, char *answer){
 		fgets(word, MAX_WORD_LENGTH, file);
 	}	
 	fclose(file);
+	file = NULL;//fukcing hate dangling pointers
 	
 	//removing the '\n'
 	word[strcspn(word, "\n")] = '\0'; 
 
 	//copying the selected word into answer
 	strcpy(answer, word);
+}
+
+void run(char *word, char *answer){
+	int state = 0;
+	
+
+
+}
+
+
+void clear_screen(){
+	printf("\e[1;1H\e[2J"); 
 }
 
 /*
@@ -148,8 +159,4 @@ void hangman(int state){
 		printf("%s\n",row0[1]);
 		printf("%s\n",row0[2]);
 	}
-}
-
-void player_console(char *word, char *answer){
-	
 }
