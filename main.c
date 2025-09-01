@@ -1,26 +1,35 @@
+
+/*exit() codes : 
+ *2 : Cannot open file
+ *3 : File is empty 
+ * */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #define MAX_CHANCES 7
-
-void word_selector(char* word);
+#define MAX_WORD_LENGTH 15 //the size 15 has been selected arbitrarily	
+void word_selector(char *word, char *answer);
 void hangman(int state);
-void playing_console();
+void player_console(char *word, char *answer);
 
 int main(){
 	srand(time(NULL));
-	char word[15]; //the size 15 has been selected arbitrarily	
+	char word[MAX_WORD_LENGTH],answer[MAX_WORD_LENGTH]; 	
 	for(int i = 0; i < 8; i++){
-		display(i);
+		hangman(i);
 		printf("\n");
 	}	    
+	word_selector(word, answer);
+	printf("%s %d\n",word, strlen(word));
+	printf("%s %d",answer, strlen(word));
 	return 0;
 }
 
-void word_selector(char* word){
-	int count = 0, randomNumber = rand() % 213;
+void word_selector(char *word, char *answer){
+	int count = 0, totalWords = 0, randomNumber;
 	FILE *file;
 
 	file = fopen("wordbank","r");
@@ -28,22 +37,42 @@ void word_selector(char* word){
 		printf("Cannot open file \n");
 		exit(2);
 	}
-	while(fgets(word,14,file) != 0){
-		count++;
-		if(count == randomNumber){
-			break;
-		}
+	
+	//counting number of words in file 
+	while(fegts(word,MAX_WORD_LENGTH, file)){
+		total++;
 	}
+	if(total == 0){
+		printf("Wordbank is empty\n");
+		close(file);
+		exit(3);
+	}
+
+	randomNumber = rand() % totalWords;
+	
+	//reading the file and selecting a random word
+	rewind(file);
+	for(int i = 0; i <= randomNumber; i++){
+		fgets(word, MAX_WORD_LENGTH, file);
+	}	
 	fclose(file);
+	
+	//removing the '\n'
+	word[strcspn(word, "\n")] = '\0'; 
+
+	//copying the selected word into answer
+	strcpy(answer, word);
 }
 
-/* "  +---+"
+/*
+"  +---+"
 "  |   |",
 "  O   |",
 " /|\  |",
 " / \  |",
 "      |",
-"========="}; */
+"========="}; 
+*/
 
 void hangman(int state){
 
@@ -119,4 +148,8 @@ void hangman(int state){
 		printf("%s\n",row0[1]);
 		printf("%s\n",row0[2]);
 	}
+}
+
+void player_console(char *word, char *answer){
+	
 }
