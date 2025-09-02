@@ -19,6 +19,7 @@ void clear_screen();
 void hangman(int state);
 void input_console(char *word, char *answer, char *guess, int *count);
 void add_word(char *destination, char source);
+void guess_display(char *guess);
 
 int main(){
 	srand(time(NULL)); 	
@@ -132,6 +133,9 @@ void word_display(char *answer){
 	}
 }
 
+void guess_display(char *guess){
+	
+}
 
 void clear_screen(){
 	printf("\e[1;1H\e[2J"); 
