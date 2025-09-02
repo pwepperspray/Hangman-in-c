@@ -61,22 +61,23 @@ void word_selector(char *word){
 }
 
 void run(){
-	int state = 0;
+	int state = 0, chances = MAX_CHANCES;
 	char word[MAX_WORD_LENGTH];
 	word_selector(word);//selects a random word
 	char answer[strlen(word) + 1]; //the '+ 1' is for the '\0' character in the answer array (or buffer?)
 	
 	//there probably is a better way to do it but i have no idea what
 	//this loop makes the elements of the answer an empty char or ' ' and adds a null terminator ('\0') 
+	/*
 	for(int i = 0; i <= strlen(word) + 1; i++){
 		answer[i] = ' ';
 		if(i == strlen(word)){
 			answer[i] = '\0';
 		}
 	}
-	hangman(state);
-	word_display(answer);
-	printf("%s %d", word, strlen(word));
+	*/
+	//found it 
+	strnset(answer,' ',strlen(word));
 }
 
 void word_display(char *answer){
