@@ -17,7 +17,7 @@ void run();
 void word_display(char *answer);
 void clear_screen();
 void hangman(int state);
-void input_console(char *word);
+void input_console(char *word, char *answer, char *guess, int *count);
 void add_word(char *destination, char source);
 
 int main(){
@@ -67,7 +67,7 @@ void word_selector(char *word){
 
 void run(){
 	int state = 0, chances = MAX_CHANCES, guess_count = 0;
-	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], answer;
+	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], input;
 
 	word_selector(word);//selects a random word
 
@@ -85,23 +85,40 @@ void run(){
 	*/
 
 	//found it 
-	strnset(answer, ' ', strlen(word));
-	int num = 1;
-	while(1 <= 2){
-		clear_screen();
-		printf("\tChances left : %d\n", chances);
-		hangman(state);
-		answer = input_console();
-	}
+	memset(answer, ' ', strlen(word));
 
+	memset(guess, ' ', MAX_WORD_LENGTH);
+	guess[MAX_WORD_LENGTH] = '\0';
+
+	int num = 0;
+	while(num <= 2){
+	
+		clear_screen();
+		word_display(answer);
+		input_console(word, answer, guess, &guess_count);
+	}
 }
 
-char input_console(char *word){
-	char input;
+void input_console(char *word, char *answer, char *guess, int *count){
+	char input, *checkInGuess;
 	printf("\n%s\n>", word);
 	scanf(" %c", &input);
 	strupr(&input);
-	return input;
+	
+	//putting the input in the guess array
+	checkInGuess = strchr(guess, input);
+	if(checkInGuess == NULL){
+		guess[*count] = input;
+		count++;
+	}
+
+	//checking if input is correct and putting it in answer array 
+	for(int i = 0; i < strlen(word); i++){
+		if(word[i] == input){
+			answer[i] = input;
+		}
+	}
+
 }
 
 void word_display(char *answer){
@@ -114,6 +131,7 @@ void word_display(char *answer){
 		}
 	}
 }
+
 
 void clear_screen(){
 	printf("\e[1;1H\e[2J"); 
