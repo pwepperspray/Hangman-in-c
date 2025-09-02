@@ -67,7 +67,7 @@ void word_selector(char *word){
 }
 
 void run(){
-	int state = 0, chances = MAX_CHANCES, guess_count = 0;
+	int state = 0, chances = MAX_CHANCES, guessCount = 0;
 	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], input;
 
 	word_selector(word);//selects a random word
@@ -88,21 +88,23 @@ void run(){
 	//found it 
 	memset(answer, ' ', strlen(word));
 
-	memset(guess, ' ', MAX_WORD_LENGTH);
-	guess[MAX_WORD_LENGTH] = '\0';
+	memset(guess, '-', MAX_WORD_LENGTH);
+	guess[MAX_WORD_LENGTH - 1] = '\0';
 
 	int num = 0;
 	while(num <= 2){
-	
 		clear_screen();
+		hangman(state);
+		printf("Chances : %d\n", chances);
+		guess_display(guess);
 		word_display(answer);
-		input_console(word, answer, guess, &guess_count);
+		input_console(word, answer, guess, &guessCount);
 	}
 }
 
 void input_console(char *word, char *answer, char *guess, int *count){
 	char input, *checkInGuess;
-	printf("\n%s\n>", word);
+	printf("%s\n>", word);
 	scanf(" %c", &input);
 	strupr(&input);
 	
@@ -119,11 +121,13 @@ void input_console(char *word, char *answer, char *guess, int *count){
 			answer[i] = input;
 		}
 	}
+	printf("\n");
 
 }
 
 void word_display(char *answer){
 	//prints dashes or the correct word based on the answer
+
 	for(int i = 0; i < strlen(answer); i++){
 		if(answer[i] == ' '){
 			printf("_");
@@ -131,10 +135,17 @@ void word_display(char *answer){
 			printf("%c", answer[i]);
 		}
 	}
+	printf("\n");
 }
 
 void guess_display(char *guess){
-	
+	printf("Guessed Words :");
+	for(int i = 0; i < strlen(guess); i++){
+		if(guess[i] = '-')
+			continue;
+		printf("%s",(guess[i]));
+	}	
+	printf("\n");
 }
 
 void clear_screen(){
