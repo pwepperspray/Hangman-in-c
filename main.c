@@ -12,20 +12,19 @@
 #define MAX_CHANCES 7
 #define MAX_WORD_LENGTH 50 //the size 50 has been selected arbitrarily	
 
-void word_selector(char *word, char *answer);
-void run(char *word, char *answer);
-void (char *word);
+void word_selector(char *word);
+void run();
+void word_display(char *answer);
 void clear_screen();
 void hangman(int state);
 
 int main(){
-	srand(time(NULL));
-	char word[MAX_WORD_LENGTH],answer[MAX_WORD_LENGTH]; 	
-	run(word, answer);
+	srand(time(NULL)); 	
+	run();
 	return 0;
 }
 
-void word_selector(char *word, char *answer){
+void word_selector(char *word){
 	int count = 0, totalWords = 0, randomNumber;
 	FILE *file;
 
@@ -56,18 +55,39 @@ void word_selector(char *word, char *answer){
 	fclose(file);
 	file = NULL;//fukcing hate dangling pointers
 	
-	//removing the '\n'
+	//exhanging the '\n'from the selected word to a null
 	word[strcspn(word, "\n")] = '\0'; 
 
-	//copying the selected word into answer
-	strcpy(answer, word);
 }
 
-void run(char *word, char *answer){
+void run(){
 	int state = 0;
+	char word[MAX_WORD_LENGTH];
+	word_selector(word);//selects a random word
+	char answer[strlen(word) + 1]; //the '+ 1' is for the '\0' character in the answer array (or buffer?)
 	
+	//there probably is a better way to do it but i have no idea what
+	//this loop makes the elements of the answer an empty char or ' ' and adds a null terminator ('\0') 
+	for(int i = 0; i <= strlen(word) + 1; i++){
+		answer[i] = ' ';
+		if(i == strlen(word)){
+			answer[i] = '\0';
+		}
+	}
+	hangman(state);
+	word_display(answer);
+	printf("%s %d", word, strlen(word));
+}
 
-
+void word_display(char *answer){
+	//prints dashes or the correct word based on the answer
+	for(int i = 0; i < strlen(answer); i++){
+		if(answer[i] == ' '){
+			printf("_");
+		}else{
+			printf("%c", answer[i]);
+		}
+	}
 }
 
 
@@ -86,13 +106,12 @@ void clear_screen(){
 */
 
 void hangman(int state){
-
 	printf("+++++++++++++HANGMAN+++++++++++++\n");
 	const char *row0[] = {"  +---+","      |","========="},
-			   *row1[] = {"  |   |"},
-			   *row2[] = {"  O   |"},
-			   *row3[] = {"  |   |"," /|   |"," /|\\  |"},
-			   *row4[] = {" /    |"," / \\  |"};
+		   *row1[] = {"  |   |"},
+	           *row2[] = {"  O   |"},
+		   *row3[] = {"  |   |"," /|   |"," /|\\  |"},
+		   *row4[] = {" /    |"," / \\  |"};
 	
 	if(state == 0){
 		printf("%s\n",row0[0]);
