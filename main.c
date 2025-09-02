@@ -17,6 +17,8 @@ void run();
 void word_display(char *answer);
 void clear_screen();
 void hangman(int state);
+void input_console(char *word);
+void add_word(char *destination, char source);
 
 int main(){
 	srand(time(NULL)); 	
@@ -55,15 +57,20 @@ void word_selector(char *word){
 	fclose(file);
 	file = NULL;//fukcing hate dangling pointers
 	
+	//converting everything to uppercase just in case 
+	strupr(word);
+
 	//exhanging the '\n'from the selected word to a null
 	word[strcspn(word, "\n")] = '\0'; 
 
 }
 
 void run(){
-	int state = 0, chances = MAX_CHANCES;
-	char word[MAX_WORD_LENGTH];
+	int state = 0, chances = MAX_CHANCES, guess_count = 0;
+	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], answer;
+
 	word_selector(word);//selects a random word
+
 	char answer[strlen(word) + 1]; //the '+ 1' is for the '\0' character in the answer array (or buffer?)
 	
 	//there probably is a better way to do it but i have no idea what
@@ -76,8 +83,25 @@ void run(){
 		}
 	}
 	*/
+
 	//found it 
-	strnset(answer,' ',strlen(word));
+	strnset(answer, ' ', strlen(word));
+	int num = 1;
+	while(1 <= 2){
+		clear_screen();
+		printf("\tChances left : %d\n", chances);
+		hangman(state);
+		answer = input_console();
+	}
+
+}
+
+char input_console(char *word){
+	char input;
+	printf("\n%s\n>", word);
+	scanf(" %c", &input);
+	strupr(&input);
+	return input;
 }
 
 void word_display(char *answer){
@@ -91,7 +115,6 @@ void word_display(char *answer){
 	}
 }
 
-
 void clear_screen(){
 	printf("\e[1;1H\e[2J"); 
 }
@@ -103,7 +126,7 @@ void clear_screen(){
 " /|\  |",
 " / \  |",
 "      |",
-"========="}; 
+"========="; 
 */
 
 void hangman(int state){
