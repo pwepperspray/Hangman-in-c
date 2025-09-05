@@ -103,6 +103,9 @@ void run(){
 			state++;
 			chances--;
 		}
+		if(!(strcmp(word,answer))){
+			break;
+		}
 
 
 		clear_screen();
@@ -166,6 +169,7 @@ void word_display(char *answer){
 }
 
 void guess_display(char *guess, int count){
+	printf("Guessed Words :: ");
 	for(int i = 0; i < count; i++){
 		printf("%c ",(guess[i]));
 	}	
