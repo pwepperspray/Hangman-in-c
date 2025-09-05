@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <conio.h>
+
 #define MAX_CHANCES 7
 #define MAX_WORD_LENGTH 50 //the size 50 has been selected arbitrarily	
 
@@ -103,14 +103,21 @@ void run(){
 			state++;
 			chances--;
 		}
+
+
 		clear_screen();
 	}
 
 	//ending screen
-	clear_screen();
-	hangman(MAX_CHANCES);
-	printf("YOU HANGED YOUR MAN \nYOU LOST!\n");
-	printf("Play Again?");
+	if(chances > 0){
+		clear_screen();
+		hangman(state);
+		printf("YOU SAVED YOUR MAN \nYOU WIN!\n");
+	}else{
+		clear_screen();
+		hangman(MAX_CHANCES);
+		printf("YOU HANGED YOUR MAN \nYOU LOSE!\n");
+	}
 		
 }
 
@@ -120,12 +127,13 @@ int input_console(char *word, char *answer, char *guess, int *count){
 	printf("%s\n", word);
 	printf(">>>");
 	scanf(" %c", &input);
-	strupr(input);
+
+	strupr(&input);//uppercaseing the input
+
 	//putting the input in the guess array
 	checkInGuess = strchr(guess, input);
 	if(checkInGuess == NULL){
 		printf("gay\n");
-		getch();
 		guess[*count] = input;
 		(*count)++;
 	}
@@ -158,7 +166,6 @@ void word_display(char *answer){
 }
 
 void guess_display(char *guess, int count){
-	printf("Guessed : %d", count);
 	for(int i = 0; i < count; i++){
 		printf("%c ",(guess[i]));
 	}	
