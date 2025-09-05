@@ -1,3 +1,8 @@
+/*
+ *A simple console Tic-Tac-Toe game in C.
+ *Author : cinnamon_rowll
+ *Github : @pwepperspray
+ */
 
 /*exit() codes : 
  * 2 : Cannot open file
@@ -12,58 +17,18 @@
 #define MAX_CHANCES 7
 #define MAX_WORD_LENGTH 50 //the size 50 has been selected arbitrarily	
 
-void word_selector(char *word);
 void run();
+void word_selector(char *word);
 void word_display(char *answer);
+void guess_display(char *guess, int count);
 void clear_screen();
 void hangman(int state);
 int input_console(char *word, char *answer, char *guess, int *count);
-void add_word(char *destination, char source);
-void guess_display(char *guess, int count);
 
 int main(){
 	srand(time(NULL)); 	
 	run();
 	return 0;
-}
-
-void word_selector(char *word){
-	int count = 0, totalWords = 0, randomNumber;
-	FILE *file;
-
-	file = fopen("wordbank","r");
-	if(file == NULL){
-		printf("Cannot open file \n");
-		exit(2);
-	}
-	
-	//counting number of words in file 
-	while(fgets(word,MAX_WORD_LENGTH, file)){
-		totalWords++;
-	}
-	if(totalWords == 0){
-		printf("Wordbank is empty\n");
-		fclose(file);
-		exit(3);
-	}
-	
-	//gettting a random number
-	randomNumber = rand() % totalWords;
-	
-	//reading the file and selecting a random word
-	rewind(file);
-	for(int i = 0; i <= randomNumber; i++){
-		fgets(word, MAX_WORD_LENGTH, file);
-	}	
-	fclose(file);
-	file = NULL;//fukcing hate dangling pointers
-	
-	//converting everything to uppercase just in case 
-	strupr(word);
-
-	//exhanging the '\n'from the selected word to a null
-	word[strcspn(word, "\n")] = '\0'; 
-
 }
 
 void run(){
@@ -124,35 +89,42 @@ void run(){
 		
 }
 
-int input_console(char *word, char *answer, char *guess, int *count){
-	char input, *checkInGuess;
-	int isCorrect = 0;
-	printf("%s\n", word);
-	printf(">>>");
-	scanf(" %c", &input);
+void word_selector(char *word){
+	int count = 0, totalWords = 0, randomNumber;
+	FILE *file;
 
-	strupr(&input);//uppercaseing the input
+	file = fopen("wordbank","r");
+	if(file == NULL){
+		printf("Cannot open file \n");
+		exit(2);
+	}
+	
+	//counting number of words in file 
+	while(fgets(word,MAX_WORD_LENGTH, file)){
+		totalWords++;
+	}
+	if(totalWords == 0){
+		printf("Wordbank is empty\n");
+		fclose(file);
+		exit(3);
+	}
+	
+	//gettting a random number
+	randomNumber = rand() % totalWords;
+	
+	//reading the file and selecting a random word
+	rewind(file);
+	for(int i = 0; i <= randomNumber; i++){
+		fgets(word, MAX_WORD_LENGTH, file);
+	}	
+	fclose(file);
+	file = NULL;//fukcing hate dangling pointers
+	
+	//converting everything to uppercase just in case 
+	strupr(word);
 
-	//putting the input in the guess array
-	checkInGuess = strchr(guess, input);
-	if(checkInGuess == NULL){
-		printf("gay\n");
-		guess[*count] = input;
-		(*count)++;
-	}
-		
-	//putting correct input into answer array
-	for(int i = 0; i < strlen(word); i++){
-		if(input == word[i]){
-			answer[i] = input;
-			isCorrect = 1;
-		}
-	}
-
-	if(isCorrect){
-		return 1;
-	}
-	return 0;
+	//exhanging the '\n'from the selected word to a null
+	word[strcspn(word, "\n")] = '\0'; 
 
 }
 
@@ -177,7 +149,7 @@ void guess_display(char *guess, int count){
 }
 
 void clear_screen(){
-//	printf("\e[1;1H\e[2J"); 
+	//printf("\e[1;1H\e[2J"); 
 	system("cls");
 }
 
@@ -264,4 +236,36 @@ void hangman(int state){
 		printf("%s\n",row0[1]);
 		printf("%s\n",row0[2]);
 	}
+}
+
+int input_console(char *word, char *answer, char *guess, int *count){
+	char input, *checkInGuess;
+	int isCorrect = 0;
+	printf("%s\n", word);
+	printf(">>>");
+	scanf(" %c", &input);
+
+	strupr(&input);//uppercaseing the input
+
+	//putting the input in the guess array
+	checkInGuess = strchr(guess, input);
+	if(checkInGuess == NULL){
+		printf("gay\n");
+		guess[*count] = input;
+		(*count)++;
+	}
+		
+	//putting correct input into answer array
+	for(int i = 0; i < strlen(word); i++){
+		if(input == word[i]){
+			answer[i] = input;
+			isCorrect = 1;
+		}
+	}
+
+	if(isCorrect){
+		return 1;
+	}
+	return 0;
+
 }
