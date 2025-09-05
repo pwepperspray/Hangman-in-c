@@ -102,13 +102,22 @@ void run(){
 			state++;
 			chances--;
 		}
-	}	
+		clear_screen();
+	}
+
+	//ending screen
+	clear_screen();
+	hangman(MAX_CHANCES);
+	printf("YOU HANGED YOUR MAN \nYOU LOST!\n");
+	printf("Play Again?");
+		
 }
 
 int input_console(char *word, char *answer, char *guess, int *count){
 	char input, *checkInGuess;
 	int isCorrect = 0;
-
+	printf(">>>");
+	scanf(" %c", &input);
 	//putting the input in the guess array
 	checkInGuess = strchr(guess, input);
 	if(checkInGuess == NULL){
@@ -127,9 +136,6 @@ int input_console(char *word, char *answer, char *guess, int *count){
 	if(isCorrect){
 		return 1;
 	}
-
-	printf("\n");
-
 	return 0;
 
 }
