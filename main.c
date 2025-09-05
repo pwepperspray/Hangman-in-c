@@ -1,7 +1,7 @@
 
 /*exit() codes : 
- *2 : Cannot open file
- *3 : File is empty 
+ * 2 : Cannot open file
+ * 3 : File is empty 
  * */
 
 #include <stdio.h>
@@ -98,6 +98,7 @@ void run(){
 		hangman(state);
 		printf("Chances :: %d\n", chances);
 		word_display(answer);
+		guess_display(guess, guessCount);
 		if(!(input_console(word, answer, guess, &guessCount))){
 			state++;
 			chances--;
@@ -116,13 +117,17 @@ void run(){
 int input_console(char *word, char *answer, char *guess, int *count){
 	char input, *checkInGuess;
 	int isCorrect = 0;
+	printf("%s\n", word);
 	printf(">>>");
 	scanf(" %c", &input);
+	strupr(input);
 	//putting the input in the guess array
 	checkInGuess = strchr(guess, input);
 	if(checkInGuess == NULL){
+		printf("gay\n");
+		getch();
 		guess[*count] = input;
-		count++;
+		(*count)++;
 	}
 		
 	//putting correct input into answer array
@@ -142,7 +147,6 @@ int input_console(char *word, char *answer, char *guess, int *count){
 
 void word_display(char *answer){
 	//prints dashes or the correct word based on the answer
-
 	for(int i = 0; i < strlen(answer); i++){
 		if(answer[i] == ' '){
 			printf("_");
@@ -154,12 +158,9 @@ void word_display(char *answer){
 }
 
 void guess_display(char *guess, int count){
-	printf("Guessed :");
+	printf("Guessed : %d", count);
 	for(int i = 0; i < count; i++){
-		if(guess[i] = ' ')
-			continue;
-
-		printf("%c",(guess[i]));
+		printf("%c ",(guess[i]));
 	}	
 	printf("\n");
 }
