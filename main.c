@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <conio.h>
 #define MAX_CHANCES 7
 #define MAX_WORD_LENGTH 50 //the size 50 has been selected arbitrarily	
 
@@ -17,9 +17,9 @@ void run();
 void word_display(char *answer);
 void clear_screen();
 void hangman(int state);
-void input_console(char *word, char *answer, char *guess, int *count);
+int input_console(char *word, char *answer, char *guess, int *count);
 void add_word(char *destination, char source);
-void guess_display(char *guess);
+void guess_display(char *guess, int count);
 
 int main(){
 	srand(time(NULL)); 	
@@ -67,61 +67,70 @@ void word_selector(char *word){
 }
 
 void run(){
-	int state = 0, chances = MAX_CHANCES, guessCount = 0;
-	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], input;
+	int unsigned chances = MAX_CHANCES, state = 0, guessCount = 0;
+	char word[MAX_WORD_LENGTH], guess[MAX_WORD_LENGTH], answer[MAX_WORD_LENGTH];
 
 	word_selector(word);//selects a random word
 
-	char answer[strlen(word) + 1]; //the '+ 1' is for the '\0' character in the answer array (or buffer?)
+	//char answer[strlen(word) + 1]; //the '+ 1' is for the '\0' character in the answer array (or buffer?)
 	
 	//there probably is a better way to do it but i have no idea what
 	//this loop makes the elements of the answer an empty char or ' ' and adds a null terminator ('\0') 
 	/*
-	for(int i = 0; i <= strlen(word) + 1; i++){
-		answer[i] = ' ';
-		if(i == strlen(word)){
-			answer[i] = '\0';
-		}
+	 * for(int i = 0; i <= strlen(word) + 1; i++){
+	 * answer[i] = ' ';
+	 * if(i == strlen(word)){
+	 * answer[i] = '\0';
+	 * }
 	}
 	*/
 
 	//found it 
 	memset(answer, ' ', strlen(word));
-
-	memset(guess, '-', MAX_WORD_LENGTH);
+	answer[strlen(word)] = '\0';
+	memset(guess, ' ', MAX_WORD_LENGTH);
 	guess[MAX_WORD_LENGTH - 1] = '\0';
 
-	int num = 0;
-	while(num <= 2){
-		clear_screen();
+	//main gameplay loop
+	clear_screen();
+
+	while(chances != 0){
 		hangman(state);
-		printf("Chances : %d\n", chances);
-		guess_display(guess);
+		printf("Chances :: %d\n", chances);
 		word_display(answer);
-		input_console(word, answer, guess, &guessCount);
-	}
+		if(!(input_console(word, answer, guess, &guessCount))){
+			state++;
+			chances--;
+		}
+	}	
 }
 
-void input_console(char *word, char *answer, char *guess, int *count){
+int input_console(char *word, char *answer, char *guess, int *count){
 	char input, *checkInGuess;
-	printf("%s\n>", word);
-	scanf(" %c", &input);
-	strupr(&input);
-	
+	int isCorrect = 0;
+
 	//putting the input in the guess array
 	checkInGuess = strchr(guess, input);
 	if(checkInGuess == NULL){
 		guess[*count] = input;
 		count++;
 	}
-
-	//checking if input is correct and putting it in answer array 
+		
+	//putting correct input into answer array
 	for(int i = 0; i < strlen(word); i++){
-		if(word[i] == input){
+		if(input == word[i]){
 			answer[i] = input;
+			isCorrect = 1;
 		}
 	}
+
+	if(isCorrect){
+		return 1;
+	}
+
 	printf("\n");
+
+	return 0;
 
 }
 
@@ -138,18 +147,20 @@ void word_display(char *answer){
 	printf("\n");
 }
 
-void guess_display(char *guess){
-	printf("Guessed Words :");
-	for(int i = 0; i < strlen(guess); i++){
-		if(guess[i] = '-')
+void guess_display(char *guess, int count){
+	printf("Guessed :");
+	for(int i = 0; i < count; i++){
+		if(guess[i] = ' ')
 			continue;
-		printf("%s",(guess[i]));
+
+		printf("%c",(guess[i]));
 	}	
 	printf("\n");
 }
 
 void clear_screen(){
-	printf("\e[1;1H\e[2J"); 
+//	printf("\e[1;1H\e[2J"); 
+	system("cls");
 }
 
 /*
